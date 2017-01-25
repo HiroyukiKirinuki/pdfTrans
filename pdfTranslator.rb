@@ -4,9 +4,10 @@
 require "poppler"
 require "selenium-webdriver"
 require "ruby-progressbar"
+require "optparse"
 
 def read_pdf
-  document = Poppler::Document.new(ARGV[0])
+  document = Poppler::Document.new(@params['input'])
   str = ""
   document.each do |page|
     str << page.get_text.gsub("\n"," ")
@@ -60,15 +61,18 @@ def translate(sentences,driver)
 end
 
 def write_file(result)
-  if ARGV[1] == nil then
-    filename = ARGV[0].split('.')[0] + "_translated.txt"
+  output = @params['output']
+  if output == nil then
+    filename = @params['input'].split('.')[0] + "_translated.txt"
   else
-    filename = ARGV[1]
+    filename = output
   end
   File.open(filename,"w") do |f|
     f.puts(result)
   end
 end
+
+@params = ARGV.getopts('','output:','input:')
 
 eng = read_pdf
 driver = init_driver
