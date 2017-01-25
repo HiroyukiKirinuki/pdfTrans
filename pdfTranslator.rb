@@ -5,9 +5,22 @@ require "poppler"
 require "selenium-webdriver"
 require "ruby-progressbar"
 require "optparse"
+require "open-uri"
 
 def read_pdf
-  document = Poppler::Document.new(@params['input'])
+  url = @params['url']
+  if @params['input'] != nil
+    document = Poppler::Document.new(@params['input'])
+  elsif @params['url'] != nil
+    fileName = File.basename(url)
+    open(fileName, 'wb') do |output|
+      open(url) do |data|
+        output.write(data.read)
+      end
+    end
+    document = Poppler::Document.new(fileName)
+    File.delete(fileName)
+  end
   str = ""
   document.each do |page|
     str << page.get_text.gsub("\n"," ")
@@ -43,14 +56,14 @@ def translate(sentences,driver)
     count += sentence.length
     my_send_keys(source,sentence)
     source.send_keys("\n")
-    if count > 4000 then
+    if count > 4000
       gt_submit.click
       sleep 3
       en_s = source.attribute("value").strip.split("\n")
       jp_s = result_box.text.strip.split("\n")
-      if @params['japanese'] then
+      if @params['japanese']
         result << jp_s.join("\n")
-      elsif @params['english'] then
+      elsif @params['english']
         result << en_s.join("\n")
       else
         en_s.zip(jp_s) do |s|
@@ -68,7 +81,7 @@ end
 
 def write_file(result)
   output = @params['output']
-  if output == nil then
+  if output == nil
     filename = @params['input'].split('.')[0] + "_translated.txt"
   else
     filename = output
@@ -78,7 +91,7 @@ def write_file(result)
   end
 end
 
-@params = ARGV.getopts('', 'output:', 'input:', 'japanese', 'english')
+@params = ARGV.getopts('', 'output:', 'input:', 'japanese', 'english','url:')
 
 eng = read_pdf
 driver = init_driver
