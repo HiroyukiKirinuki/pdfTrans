@@ -37,7 +37,6 @@ def translate(sentences,driver)
   pb = ProgressBar.create(:total => sentences.length, :length => 100)
   result = ""
   count = 0
-  progress = 0
   sentences.each do |sentence|
     pb.increment
     count += sentence.length
@@ -54,7 +53,6 @@ def translate(sentences,driver)
       end
       source.clear
       count = 0
-      # break # 仮
     end
   end
   driver.quit
@@ -62,7 +60,12 @@ def translate(sentences,driver)
 end
 
 def write_file(result)
-  File.open(ARGV[1],"w") do |f|
+  if ARGV[1] == nil then
+    filename = ARGV[0].split('.')[0] + "_translated.txt"
+  else
+    filename = ARGV[1]
+  end
+  File.open(filename,"w") do |f|
     f.puts(result)
   end
 end
