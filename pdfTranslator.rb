@@ -46,11 +46,17 @@ def translate(sentences,driver)
     if count > 4000 then
       gt_submit.click
       sleep 3
-      jp_s = source.attribute("value").strip.split("\n")
-      en_s = result_box.text.strip.split("\n")
-      jp_s.zip(en_s) do |s|
-        result << s.join("\n")
-        result << "\n"
+      en_s = source.attribute("value").strip.split("\n")
+      jp_s = result_box.text.strip.split("\n")
+      if @params['japanese'] then
+        result << jp_s.join("\n")
+      elsif @params['english'] then
+        result << en_s.join("\n")
+      else
+        en_s.zip(jp_s) do |s|
+          result << s.join("\n")
+          result << "\n"
+        end
       end
       source.clear
       count = 0
@@ -72,7 +78,7 @@ def write_file(result)
   end
 end
 
-@params = ARGV.getopts('','output:','input:')
+@params = ARGV.getopts('', 'output:', 'input:', 'japanese', 'english')
 
 eng = read_pdf
 driver = init_driver
