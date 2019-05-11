@@ -6,14 +6,15 @@ require "optparse"
 require "./pdfReader.rb"
 require "./translator.rb"
 
-start_time = Time.now
-
-@params = ARGV.getopts('', 'output:', 'input:', 'jp', 'en', 'url:')
+@params = ARGV.getopts('', 'output:', 'input:', 'jp', 'en', 'url:', 'google', 'head')
 input = @params['input']
 url = @params['url']
 output = @params['output']
 is_japanese = @params['jp']
 is_english = @params['en']
+is_google = @params['google']
+is_head = @params['head']
+args = {:jp => is_japanese, :en => is_english, :google => is_google, :head => is_head}
 
 if input == nil && output == nil
   STDERR.puts "error: specify output file name"
@@ -27,14 +28,14 @@ if output.nil?
 else
   filename = output
 end
+
 File.open(filename,'w'){|file| file = nil}
 file = File.open(filename,"a")
+
 if is_english && !is_japanese
   file.puts sentences.join("\n")
 else
-  Translator.new.translate(sentences, is_japanese, is_english, file)
+  Translator.new(args).translate(sentences, file)
 end
 
 file.close
-
-p "処理時間 #{Time.now - start_time}s"
