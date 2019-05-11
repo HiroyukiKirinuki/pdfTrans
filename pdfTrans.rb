@@ -8,12 +8,12 @@ require "./translator.rb"
 
 start_time = Time.now
 
-@params = ARGV.getopts('', 'output:', 'input:', 'japanese', 'english', 'url:')
+@params = ARGV.getopts('', 'output:', 'input:', 'jp', 'en', 'url:')
 input = @params['input']
 url = @params['url']
 output = @params['output']
-is_japanese = @params['japanese']
-is_english = @params['english']
+is_japanese = @params['jp']
+is_english = @params['en']
 
 if input == nil && output == nil
   STDERR.puts "error: specify output file name"
