@@ -1,3 +1,4 @@
+require "bundler/setup"
 require "poppler"
 require "open-uri"
 
