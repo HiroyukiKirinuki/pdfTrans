@@ -5,11 +5,15 @@
 ### 基本の使い方
 
 ```
-ruby pdfTrans.rb --input <ファイル名>
+bundle install
 ```
 
 ```
-ruby pdfTrans.rb --url <URL>
+bundle exec ruby pdfTrans.rb --input <ファイル名>
+```
+
+```
+bundle exec ruby pdfTrans.rb --url <URL> --output <Filename>
 ```
 
 - ```--input```オプションで入力するファイルを指定
@@ -19,8 +23,10 @@ ruby pdfTrans.rb --url <URL>
 
 ### その他オプション
 - --output
-  - 出力ファイル名を指定できる
-- --japanese(-j)
+  - 出力ファイル名を指定
+- --jp
   - 日本語のみ出力
-- --english(-e)
+- --en
   - 英語のみ出力 
+- --head
+  - ヘッドレスにしない
