@@ -37,9 +37,14 @@ class Translator
     @driver.navigate.to @props[:url]
 
     if !@args[:google]
+      #source
       @driver.find_element(:id, 'select2-sourceButtonUrlTranslation-container').click
       @wait.until {@driver.find_elements(:class,'select2-results__option')[1].displayed?}
       @driver.find_elements(:class, 'select2-results__option')[1].click
+      #target
+      @driver.find_element(:id, 'select2-targetButtonTextTranslation-container').click
+      @wait.until {@driver.find_elements(:class,'select2-results__option')[0].displayed?}
+      @driver.find_elements(:class, 'select2-results__option')[0].click
     end
 
     @source = @driver.find_element(*@props[:source])
