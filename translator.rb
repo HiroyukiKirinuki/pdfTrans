@@ -42,6 +42,7 @@ class Translator
       @wait.until {@driver.find_elements(:class,'select2-results__option')[1].displayed?}
       @driver.find_elements(:class, 'select2-results__option')[1].click
       #target
+      sleep 1
       @driver.find_element(:id, 'select2-targetButtonTextTranslation-container').click
       @wait.until {@driver.find_elements(:class,'select2-results__option')[0].displayed?}
       @driver.find_elements(:class, 'select2-results__option')[0].click
