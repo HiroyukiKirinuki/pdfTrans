@@ -27,7 +27,7 @@ class Translator
       options.add_argument('--headless')
     end
     @driver = Selenium::WebDriver.for :chrome, options: options
-    @wait = Selenium::WebDriver::Wait.new(:timeout => 60)
+    @wait = Selenium::WebDriver::Wait.new(:timeout => 180)
     @props = if @args[:google]
                GOOGLE_PROPS
              else
@@ -77,6 +77,7 @@ class Translator
       source_texts = @source.attribute('innerHTML').strip.split("\n")
     else
       @driver.find_element(:id, 'translateButtonTextTranslation').click
+      sleep 3
       @wait.until {@driver.find_element(*@props[:result_box]).attribute('innerText') != @props[:past_result]}
       result = @driver.find_element(*@props[:result_box]).attribute('innerText')
       @props[:past_result] = result
