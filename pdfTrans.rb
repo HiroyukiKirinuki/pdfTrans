@@ -4,7 +4,9 @@
 # need amend
 require "optparse"
 require "./pdfReader.rb"
-require "./translator.rb"
+require "./translator/translator.rb"
+require "./translator/mirai_translator.rb"
+require "./translator/google_translator.rb"
 
 @params = ARGV.getopts('', 'output:', 'input:', 'jp', 'en', 'url:', 'google', 'head')
 input = @params['input']
@@ -35,7 +37,11 @@ file = File.open(filename,"a")
 if is_english && !is_japanese
   file.puts sentences.join("\n")
 else
-  Translator.new(args).translate(sentences, file)
+  if is_google
+    Google_Translator.new(args).translate(sentences, file)
+  else
+    Mirai_Translator.new(args).translate(sentences, file)
+  end 
 end
 
 file.close
