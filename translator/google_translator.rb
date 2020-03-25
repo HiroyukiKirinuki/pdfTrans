@@ -1,5 +1,3 @@
-require "selenium-webdriver"
-
 class Google_Translator < Translator
 
   def initialize(args)

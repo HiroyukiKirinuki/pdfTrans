@@ -15,7 +15,9 @@ class Translator
     sentences.each do |sentence|
       pb.increment
       count += sentence.length
-      my_send_keys(sentence)
+      @input_box.send_keys("\n")
+      @driver.execute_script("arguments[0].value +='#{sentence}'", @input_box)
+
       if count > @props[:max_length]
         write_to_file(file)
         count = 0
@@ -29,8 +31,8 @@ class Translator
   def write_to_file(file)
     result_texts = get_result_texts()
     source_texts = get_source_texts()
-    source_texts << "\n"
     result_texts << "\n"
+    source_texts << "\n"
     if @args[:jp] && !@args[:en]
       file.puts result_texts.join("")
     else
@@ -49,14 +51,5 @@ class Translator
   private
   def get_result_texts
     raise NotImplementedError.new("#{self.class}##{__method__} is not implemented")
-  end
-
-  private
-  def my_send_keys(sentence) # avoid error of sendkeys
-    chunks = sentence.scan(/.{1,80}/)
-    chunks.each do |c|
-      @input_box.send_keys(c)
-    end
-    @input_box.send_keys("\n")
   end
 end

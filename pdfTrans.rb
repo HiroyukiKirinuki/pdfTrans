@@ -7,16 +7,18 @@ require "./pdfReader.rb"
 require "./translator/translator.rb"
 require "./translator/mirai_translator.rb"
 require "./translator/google_translator.rb"
+require "./translator/deepl_translator.rb"
 
-@params = ARGV.getopts('', 'output:', 'input:', 'jp', 'en', 'url:', 'google', 'head')
+@params = ARGV.getopts('', 'output:', 'input:', 'jp', 'en', 'url:', 'google', 'mirai', 'head')
 input = @params['input']
 url = @params['url']
 output = @params['output']
 is_japanese = @params['jp']
 is_english = @params['en']
 is_google = @params['google']
+is_mirai = @params['mirai']
 is_head = @params['head']
-args = {:jp => is_japanese, :en => is_english, :google => is_google, :head => is_head}
+args = {:jp => is_japanese, :en => is_english, :google => is_google, :mirai => is_mirai, :head => is_head}
 
 if input == nil && output == nil
   STDERR.puts "error: specify output file name"
@@ -39,9 +41,11 @@ if is_english && !is_japanese
 else
   if is_google
     Google_Translator.new(args).translate(sentences, file)
-  else
+  elsif is_mirai
     Mirai_Translator.new(args).translate(sentences, file)
-  end 
+  else
+    Deepl_Translator.new(args).translate(sentences, file)
+  end
 end
 
 file.close

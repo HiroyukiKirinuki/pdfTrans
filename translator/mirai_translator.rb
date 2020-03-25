@@ -1,5 +1,4 @@
-require "selenium-webdriver"
-
+# coding: utf-8
 class Mirai_Translator < Translator
 
   def initialize(args)
@@ -42,9 +41,16 @@ class Mirai_Translator < Translator
   private
   def get_result_texts
     @driver.find_element(:id, 'translateButtonTextTranslation').click
-    sleep 3
+    sleep 10
     @wait.until {@driver.find_element(*@props[:result_box]).attribute('innerText') != @props[:past_result]}
     result = @driver.find_element(*@props[:result_box]).attribute('innerText')
+    if result.include?('翻訳に失敗')
+      sleep 30
+      get_result_texts()
+    elsif result.include?('翻訳は1分毎に10回までとなります')
+      sleep 30
+      get_result_texts()
+    end
     @props[:past_result] = result
     return result.strip.split("\n")
   end
