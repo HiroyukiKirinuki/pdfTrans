@@ -16,6 +16,7 @@ class Translator
       pb.increment
       count += sentence.length
       @input_box.send_keys("\n")
+      sentence.gsub!("'", "\\\\'")
       @driver.execute_script("arguments[0].value +='#{sentence}'", @input_box)
 
       if count > @props[:max_length]
